@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Register for Exam{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body p-4">
+                <h3 class="mb-4">Exam Registration</h3>
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Course</label>
+                        <select name="course" class="form-select" required>
+                            <option value="">Select course</option>
+                            {% for c in courses %}
+                            <option value="{{ c.id }}">{{ c.course_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mock Test (optional)</label>
+                        <select name="mock_test" class="form-select">
+                            <option value="">None</option>
+                            {% for mt in mock_tests %}
+                            <option value="{{ mt.id }}">{{ mt.mock_test_name }} - {{ mt.course.course_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Exam Date</label>
+                        <input type="date" name="exam_date" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Registration</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

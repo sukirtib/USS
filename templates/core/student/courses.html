@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}My Courses{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">My Courses</h2>
+<a href="{% url 'register_course' %}" class="btn btn-primary mb-3">Register for Course</a>
+
+<h5 class="mt-4">Registrations (Pending Approval)</h5>
+<div class="card mb-4">
+    <div class="card-body">
+        <table class="table">
+            <thead><tr><th>Course</th><th>Batch</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody>
+                {% for reg in registrations %}
+                <tr>
+                    <td>{{ reg.course.course_name }}</td>
+                    <td>{{ reg.batch.batch_code }}</td>
+                    <td>{{ reg.registration_date|date }}</td>
+                    <td><span class="badge badge-{{ reg.status|lower }}">{{ reg.status }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-muted">No registrations.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h5>Enrollments</h5>
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <thead><tr><th>Course</th><th>Batch</th><th>Enrollment Date</th><th>Status</th></tr></thead>
+            <tbody>
+                {% for enr in enrollments %}
+                <tr>
+                    <td>{{ enr.registration.course.course_name }}</td>
+                    <td>{{ enr.registration.batch.batch_code }}</td>
+                    <td>{{ enr.enrollment_date|date }}</td>
+                    <td><span class="badge badge-{{ enr.status|lower }}">{{ enr.status }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-muted">No enrollments.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
