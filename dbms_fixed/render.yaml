@@ -23,9 +23,9 @@ services:
       - key: ALLOWED_HOSTS
         value: .onrender.com
       - key: RENDER
-        value: true
+        value: 1
       - key: DEBUG
-        value: false
+        value: 0
       - key: DJANGO_SUPERUSER_EMAIL
         value: admin@gmail.com
       - key: DJANGO_SUPERUSER_PASSWORD
