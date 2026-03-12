@@ -48,10 +48,6 @@ class StudentProfile(models.Model):
     consultant = models.ForeignKey(
         'ConsultantProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='students'
     )
-    date_of_birth = models.DateField(null=True, blank=True)
-    address = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
     trainer = models.ForeignKey(
         'TrainerProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='students'
     )
