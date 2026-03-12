@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: ctlms
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn ctlms.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ctlms-db
+          property: connectionString
+      - key: RENDER
+        value: true
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+
+databases:
+  - name: ctlms-db
+    databaseName: ctlms
+    user: ctlms_user
