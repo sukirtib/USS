@@ -19,7 +19,7 @@ class Command(BaseCommand):
         email = options['email'] or os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@gmail.com')
         password = options['password'] or os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin123')
 
-        user = User.objects.filter(Q(username=username) | Q(role='ADMIN')).first()
+        user = User.objects.filter(username=username).first()
         if user:
             changed = False
             if not user.is_staff:
