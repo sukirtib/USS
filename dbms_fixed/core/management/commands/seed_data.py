@@ -201,8 +201,7 @@ class Command(BaseCommand):
             if status == 'COMPLETED':
                 Counseling.objects.create(
                     appointment=apt,
-                    recommendations='Recommended IELTS preparation, target universities shortlisted.',
-                    notes='Student shows good progress. Follow up in 2 weeks.',
+                    notes='Recommended IELTS preparation, target universities shortlisted. Student shows good progress.',
                     next_followup=date.today() + timedelta(days=14)
                 )
         self.stdout.write(self.style.SUCCESS(f'Created {appointments_created} appointments'))
