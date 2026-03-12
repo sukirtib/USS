@@ -1,5 +1,5 @@
 databases:
-  - name: dmbs
+  - name: ctlms-db
     plan: free
     databaseName: ctlms
     user: ctlms_user
@@ -22,3 +22,11 @@ services:
         value: 4
       - key: ALLOWED_HOSTS
         value: .onrender.com
+      - key: RENDER
+        value: true
+      - key: DEBUG
+        value: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        value: admin@gmail.com
+      - key: DJANGO_SUPERUSER_PASSWORD
+        value: admin
