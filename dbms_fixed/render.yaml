@@ -1,8 +1,8 @@
 databases:
-  - name: ctlms-db
+  - name: dbms
     plan: free
-    databaseName: ctlms
-    user: ctlms_user
+    databaseName: dbms
+    user: dbms_user
 
 services:
   - type: web
@@ -14,7 +14,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: ctlms-db
+          name: dbms
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
@@ -30,3 +30,4 @@ services:
         value: admin@gmail.com
       - key: DJANGO_SUPERUSER_PASSWORD
         value: admin
+  
