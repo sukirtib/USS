@@ -94,17 +94,17 @@ class Command(BaseCommand):
         # Courses with multiple batches
         courses = []
         course_data = [
-            ('IELTS', 'IELTS Preparation', 25000, 12, 'Complete IELTS preparation covering all four modules'),
-            ('PTE', 'PTE Academic', 20000, 10, 'PTE Academic test preparation with practice tests'),
-            ('SAT', 'SAT Preparation', 30000, 14, 'Comprehensive SAT prep for Math and English'),
-            ('GRE', 'GRE Graduate Prep', 35000, 16, 'GRE preparation for graduate school admission'),
-            ('TOEFL', 'TOEFL iBT', 22000, 10, 'TOEFL internet-based test preparation'),
+            ('IELTS', 'IELTS Preparation', 25000, 12),
+            ('PTE', 'PTE Academic', 20000, 10),
+            ('SAT', 'SAT Preparation', 30000, 14),
+            ('GRE', 'GRE Graduate Prep', 35000, 16),
+            ('TOEFL', 'TOEFL iBT', 22000, 10),
         ]
-        for code, name, fee, weeks, desc in course_data:
+        for code, name, fee, weeks in course_data:
             if not Course.objects.filter(course_code=code).exists():
                 course = Course.objects.create(
                     course_code=code, course_name=name, fee=fee, 
-                    duration_weeks=weeks, description=desc
+                    duration_weeks=weeks
                 )
                 courses.append(course)
                 # Create multiple batches per course
