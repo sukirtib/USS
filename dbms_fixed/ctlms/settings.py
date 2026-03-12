@@ -10,7 +10,8 @@ try:
 except ModuleNotFoundError:  # allows running even if dependency isn't installed yet
     load_dotenv = None
 
-if load_dotenv:
+# Only load .env file for local development, not on Render
+if load_dotenv and not os.environ.get('RENDER'):
     load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
