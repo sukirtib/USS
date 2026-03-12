@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Consultant Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Welcome, {{ profile.user.get_full_name }}</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted">Total Sessions</h6>
+                <h4>{{ total_sessions }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted">Pending Approvals</h6>
+                <h4>{{ pending_appointments.count }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted">Upcoming</h6>
+                <h4>{{ upcoming_appointments.count }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">Pending Appointments</div>
+            <div class="card-body">
+                {% for apt in pending_appointments %}
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <div>
+                        <strong>{{ apt.student.user.get_full_name }}</strong><br>
+                        <small class="text-muted">{{ apt.preferred_date }} at {{ apt.preferred_time }}</small><br>
+                        <small>{{ apt.purpose|truncatewords:15 }}</small>
+                    </div>
+                    <span class="badge badge-pending">Awaiting Admin</span>
+                </div>
+                {% empty %}
+                <p class="text-muted mb-0">No pending appointments.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">Upcoming Approved Appointments</div>
+            <div class="card-body">
+                {% for apt in upcoming_appointments %}
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <div>
+                        <strong>{{ apt.student.user.get_full_name }}</strong><br>
+                        <small class="text-muted">{{ apt.preferred_date }} at {{ apt.preferred_time }}</small>
+                    </div>
+                    <a href="{% url 'conduct_counseling' apt.id %}" class="btn btn-sm btn-primary">Conduct Session</a>
+                </div>
+                {% empty %}
+                <p class="text-muted mb-0">No upcoming appointments.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

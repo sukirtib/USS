@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Reports</h2>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">Course-wise Enrollment</div>
+            <div class="card-body">
+                <table class="table">
+                    <thead><tr><th>Course</th><th>Enrollments</th></tr></thead>
+                    <tbody>
+                        {% for c in course_enrollments %}
+                        <tr><td>{{ c.course_name }}</td><td>{{ c.enrollment_count }}</td></tr>
+                        {% empty %}
+                        <tr><td colspan="2" class="text-muted">No data.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">Consultant Session Count</div>
+            <div class="card-body">
+                <table class="table">
+                    <thead><tr><th>Consultant</th><th>Sessions</th></tr></thead>
+                    <tbody>
+                        {% for c in consultant_sessions %}
+                        <tr><td>{{ c.name }}</td><td>{{ c.session_count }}</td></tr>
+                        {% empty %}
+                        <tr><td colspan="2" class="text-muted">No data.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Financial Summary</div>
+    <div class="card-body">
+        <table class="table">
+            <thead><tr><th>Purpose</th><th>Total Amount</th></tr></thead>
+            <tbody>
+                {% for f in financial_summary %}
+                <tr><td>{{ f.purpose }}</td><td>₹{{ f.total }}</td></tr>
+                {% empty %}
+                <tr><td colspan="2" class="text-muted">No payments yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
