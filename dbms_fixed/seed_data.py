@@ -14,8 +14,8 @@ from core.models import (
     Course, Batch, CourseRegistration, MockTest
 )
 
-if User.objects.exists():
-    print('Users already exist. Skipping seed.')
+if User.objects.filter(username='student1').exists():
+    print('Demo data already seeded. Skipping.')
 else:
     print('Seeding data...')
 
