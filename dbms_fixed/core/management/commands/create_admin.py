@@ -1,3 +1,4 @@
+import os
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 
@@ -9,13 +10,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--username', default='admin', help='Admin username (default: admin)')
-        parser.add_argument('--email', default='admin@gmail.com', help='Admin email')
-        parser.add_argument('--password', default='admin', help='Admin password (default: admin)')
+        parser.add_argument('--email', default=None, help='Admin email')
+        parser.add_argument('--password', default=None, help='Admin password')
 
     def handle(self, *args, **options):
         username = options['username']
-        email = options['email']
-        password = options['password']
+        email = options['email'] or os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@gmail.com')
+        password = options['password'] or os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin')
 
         if User.objects.filter(username=username).exists():
             self.stdout.write(self.style.WARNING(f'Admin user "{username}" already exists. Skipping.'))
