@@ -19,7 +19,16 @@ class Command(BaseCommand):
         password = options['password'] or os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin')
 
         if User.objects.filter(username=username).exists():
-            self.stdout.write(self.style.WARNING(f'Admin user "{username}" already exists. Skipping.'))
+            # Ensure existing admin has proper Django admin access
+            user = User.objects.get(username=username)
+            if not user.is_staff or not user.is_superuser:
+                user.is_staff = True
+                user.is_superuser = True
+                user.role = User.Role.ADMIN
+                user.save()
+                self.stdout.write(self.style.SUCCESS(f'Updated "{username}" with superuser privileges.'))
+            else:
+                self.stdout.write(self.style.WARNING(f'Admin user "{username}" already exists. Skipping.'))
             return
 
         user = User.objects.create_superuser(
