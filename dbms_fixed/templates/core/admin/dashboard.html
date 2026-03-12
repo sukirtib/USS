@@ -24,8 +24,9 @@
 <div class="row">
     <div class="col-lg-6">
         <div class="card mb-4">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between">
                 <span>Pending Course Registrations</span>
+                <a href="/admin/core/courseregistration/" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <div class="card-body">
                 {% for reg in recent_registrations %}
@@ -48,8 +49,9 @@
     </div>
     <div class="col-lg-6">
         <div class="card mb-4">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between">
                 <span>Pending Appointments</span>
+                <a href="/admin/core/appointmentbooking/" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <div class="card-body">
                 {% for apt in recent_appointments %}
@@ -74,12 +76,14 @@
 
 <div class="mt-3">
     <a href="{% url 'admin_reports' %}" class="btn btn-accent">View Reports</a>
+    <a href="/admin/" class="btn btn-outline-primary">Django Admin</a>
 </div>
 
 <!-- Recent Exam Registrations -->
 <div class="card mt-4">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-between">
         <span>Exam Registrations</span>
+        <a href="/admin/core/examregistration/" class="btn btn-sm btn-outline-primary">View All</a>
     </div>
     <div class="card-body p-0">
         <table class="table table-sm mb-0">
@@ -104,8 +108,9 @@
 
 <!-- Recent Payments -->
 <div class="card mt-4">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-between">
         <span>Recent Payments</span>
+        <a href="/admin/core/payment/" class="btn btn-sm btn-outline-primary">View All</a>
     </div>
     <div class="card-body p-0">
         <table class="table table-sm mb-0">
