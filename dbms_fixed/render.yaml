@@ -1,24 +1,24 @@
+databases:
+  - name: dmbs
+    plan: free
+    databaseName: ctlms
+    user: ctlms_user
+
 services:
   - type: web
+    plan: free
     name: ctlms
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn ctlms.wsgi:application"
+    startCommand: "python -m gunicorn ctlms.wsgi:application"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: ctlms-db
           property: connectionString
-      - key: RENDER
-        value: true
-      - key: DJANGO_SECRET_KEY
+      - key: SECRET_KEY
         generateValue: true
-      - key: DEBUG
-        value: false
+      - key: WEB_CONCURRENCY
+        value: 4
       - key: ALLOWED_HOSTS
         value: .onrender.com
-
-databases:
-  - name: ctlms-db
-    databaseName: ctlms
-    user: ctlms_user

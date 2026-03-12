@@ -15,6 +15,9 @@ class Command(BaseCommand):
     help = 'Seed demo data for CTLMS'
 
     def handle(self, *args, **options):
+        if User.objects.exists():
+            self.stdout.write(self.style.WARNING('Users already exist. Skipping seed.'))
+            return
         self.stdout.write('Seeding data...')
 
         # Admin
