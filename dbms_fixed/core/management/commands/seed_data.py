@@ -177,7 +177,7 @@ class Command(BaseCommand):
             if i < 4:
                 Payment.objects.create(
                     student=student, amount=course.fee,
-                    payment_method='CARD' if i % 2 == 0 else 'BANK',
+                    payment_method='CARD' if i % 2 == 0 else 'BANK_TRANSFER',
                     purpose='COURSE_FEE', status='COMPLETED',
                     transaction_id=str(uuid.uuid4()).replace('-', '').upper()[:16]
                 )
@@ -223,12 +223,14 @@ class Command(BaseCommand):
 
         # Mock Test Scores
         mock_tests = list(MockTest.objects.all())
+        trainer_profile = TrainerProfile.objects.first()
         scores_created = 0
         for i, student in enumerate(students[:3]):
             for mock_test in mock_tests[:2]:
                 MockTestScore.objects.create(
-                    student=student, mock_test=mock_test,
-                    score=70 + i*5, feedback=f'Good performance. Areas to improve: reading speed.'
+                    student=student, mock_test=mock_test, trainer=trainer_profile,
+                    score=Decimal('70') + i*5,
+                    remarks='Good performance. Focus on reading speed.'
                 )
                 scores_created += 1
         self.stdout.write(self.style.SUCCESS(f'Created {scores_created} mock test scores'))
