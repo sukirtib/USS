@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h3 class="mb-4">📊 Analytics & Reports</h3>
+
+<!-- Conversion Funnel -->
+<div class="card mb-4">
+  <div class="card-header fw-600">Conversion Analytics</div>
+  <div class="card-body">
+    <div class="row text-center g-3">
+      <div class="col">
+        <div style="font-size:2rem;font-weight:800;color:#0f2342;">{{ total_appointments }}</div>
+        <div class="text-muted small">Total Appointments</div>
+      </div>
+      <div class="col-auto d-flex align-items-center text-muted">→</div>
+      <div class="col">
+        <div style="font-size:2rem;font-weight:800;color:#5d7b9f;">{{ appointments_to_registration }}</div>
+        <div class="text-muted small">Course Registrations</div>
+      </div>
+      <div class="col-auto d-flex align-items-center text-muted">→</div>
+      <div class="col">
+        <div style="font-size:2rem;font-weight:800;color:#48bb78;">{{ registrations_to_enrollment }}</div>
+        <div class="text-muted small">Enrollments</div>
+      </div>
+      <div class="col-auto d-flex align-items-center text-muted">=</div>
+      <div class="col">
+        <div style="font-size:2rem;font-weight:800;color:#f3b882;">{{ conversion_rate }}%</div>
+        <div class="text-muted small">Conversion Rate</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- Course Enrollments -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-600">Course Enrollments</div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr><th>Course</th><th class="text-end">Enrolled</th></tr></thead>
+          <tbody>
+            {% for c in course_enrollments %}
+            <tr><td>{{ c.course_name }}</td><td class="text-end fw-600">{{ c.enrollment_count }}</td></tr>
+            {% empty %}<tr><td colspan="2" class="text-center text-muted py-3">No data</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Financial Summary -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header fw-600">Financial Summary</div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr><th>Purpose</th><th class="text-end">Total (₹)</th></tr></thead>
+          <tbody>
+            {% for f in financial_summary %}
+            <tr><td>{{ f.purpose }}</td><td class="text-end fw-600">{{ f.total }}</td></tr>
+            {% empty %}<tr><td colspan="2" class="text-center text-muted py-3">No completed payments</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Consultant Performance -->
+<div class="card mb-4">
+  <div class="card-header fw-600">Consultant Performance</div>
+  <div class="card-body p-0">
+    <table class="table table-sm mb-0">
+      <thead class="table-light"><tr><th>Consultant</th><th>Assigned Students</th><th>Sessions Done</th><th>Pending</th></tr></thead>
+      <tbody>
+        {% for c in consultant_sessions %}
+        <tr>
+          <td>{{ c.name }}</td>
+          <td>{{ c.student_count }}</td>
+          <td><span class="badge bg-success">{{ c.session_count }}</span></td>
+          <td><span class="badge bg-warning text-dark">{{ c.pending_count }}</span></td>
+        </tr>
+        {% empty %}<tr><td colspan="4" class="text-center text-muted py-3">No consultants</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Trainer Workload -->
+<div class="card mb-4">
+  <div class="card-header fw-600">Trainer Workload</div>
+  <div class="card-body p-0">
+    <table class="table table-sm mb-0">
+      <thead class="table-light"><tr><th>Trainer</th><th>Total Batches</th><th>Active Batches</th><th>Students</th><th>Scores Recorded</th></tr></thead>
+      <tbody>
+        {% for t in trainer_workload %}
+        <tr>
+          <td>{{ t.name }}</td>
+          <td>{{ t.batch_count }}</td>
+          <td><span class="badge bg-primary">{{ t.active_batches }}</span></td>
+          <td>{{ t.student_count }}</td>
+          <td>{{ t.scores_recorded }}</td>
+        </tr>
+        {% empty %}<tr><td colspan="5" class="text-center text-muted py-3">No trainers</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Student Journey -->
+<div class="card mb-4">
+  <div class="card-header fw-600">Student Journey Report (Top 20)</div>
+  <div class="card-body p-0">
+    <table class="table table-sm mb-0">
+      <thead class="table-light"><tr><th>Student</th><th>Appointments</th><th>Registrations</th><th>Enrollments</th><th>Total Paid (₹)</th></tr></thead>
+      <tbody>
+        {% for s in student_journeys %}
+        <tr>
+          <td>{{ s.name }}</td>
+          <td>{{ s.appointments }}</td>
+          <td>{{ s.registrations }}</td>
+          <td>{{ s.enrollments }}</td>
+          <td class="fw-600">{{ s.payments }}</td>
+        </tr>
+        {% empty %}<tr><td colspan="5" class="text-center text-muted py-3">No student data</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<a href="{% url 'admin_dashboard' %}" class="btn btn-outline-primary">← Back to Dashboard</a>
+{% endblock %}

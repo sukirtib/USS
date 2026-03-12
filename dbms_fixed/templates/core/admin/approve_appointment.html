@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Approve Appointment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body p-4">
+                <h3 class="mb-4">Review Appointment</h3>
+                <div class="mb-4 p-3 bg-light rounded">
+                    <p><strong>Student:</strong> {{ appointment.student.user.get_full_name }}</p>
+                    <p><strong>Consultant:</strong> {{ appointment.consultant.user.get_full_name }}</p>
+                    <p><strong>Date & Time:</strong> {{ appointment.preferred_date }} at {{ appointment.preferred_time }}</p>
+                    <p><strong>Purpose:</strong> {{ appointment.purpose }}</p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+                    <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

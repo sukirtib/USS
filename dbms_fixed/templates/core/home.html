@@ -1,0 +1,394 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { background: #fdfcf9; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 0 60px;
+    background: #fdfcf9;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f5ede3; color: #c47d3e;
+    border-radius: 100px; padding: 5px 14px;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px;
+    margin-bottom: 20px;
+  }
+  .hero-eyebrow::before { content: ''; width: 6px; height: 6px; background: #c47d3e; border-radius: 50%; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+    font-weight: 700; color: #1e1e1e; line-height: 1.2;
+    margin-bottom: 18px;
+  }
+  .hero h1 em { font-style: italic; color: #c47d3e; }
+  .hero-sub {
+    color: #6b6b6b; font-size: 1.05rem; line-height: 1.75;
+    max-width: 480px; margin-bottom: 36px;
+  }
+  .btn-warm {
+    background: #c47d3e; color: #fff; border: none;
+    padding: 13px 30px; border-radius: 100px; font-size: 0.95rem; font-weight: 600;
+    text-decoration: none; display: inline-block;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-warm:hover { background: #a8682f; color: #fff; transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: #1e1e1e; border: 1.5px solid #d9d0c5;
+    padding: 12px 28px; border-radius: 100px; font-size: 0.95rem; font-weight: 500;
+    text-decoration: none; display: inline-block;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover { border-color: #c47d3e; color: #c47d3e; background: #fdf5ee; }
+
+  /* Hero illustration card */
+  .hero-card {
+    background: #fff;
+    border: 1px solid #ede9e2;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.06);
+  }
+  .service-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 0; border-bottom: 1px solid #f2ede6;
+  }
+  .service-row:last-child { border: none; padding-bottom: 0; }
+  .svc-dot {
+    width: 38px; height: 38px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .d1 { background: #fef3e8; }
+  .d2 { background: #eaf4fb; }
+  .d3 { background: #edf7f0; }
+  .d4 { background: #f3edfb; }
+  .svc-title { font-weight: 600; font-size: 0.9rem; color: #1e1e1e; }
+  .svc-sub { font-size: 0.78rem; color: #9a9a9a; }
+
+  /* ── STATS ── */
+  .stats-strip {
+    background: #fff;
+    border: 1px solid #ede9e2;
+    border-radius: 20px;
+    padding: 28px 36px;
+    margin: 0 auto;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  }
+  .stat-n { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #1e1e1e; }
+  .stat-l { font-size: 0.8rem; color: #9a9a9a; margin-top: 2px; }
+  .stat-sep { width: 1px; background: #ede9e2; height: 40px; }
+
+  /* ── SECTION LABEL ── */
+  .sec-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: #c47d3e; margin-bottom: 10px;
+  }
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem; font-weight: 700; color: #1e1e1e;
+    margin-bottom: 10px;
+  }
+  .sec-sub { color: #7a7a7a; font-size: 0.95rem; max-width: 480px; margin: 0 auto; }
+
+  /* ── STEPS ── */
+  .step-box {
+    background: #fff; border: 1px solid #ede9e2; border-radius: 18px;
+    padding: 28px 24px; height: 100%;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .step-box:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.08); transform: translateY(-3px); }
+  .step-n {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem; font-weight: 700;
+    color: #ede9e2; line-height: 1; margin-bottom: 16px;
+  }
+  .step-box h6 { font-weight: 600; font-size: 0.95rem; color: #1e1e1e; margin-bottom: 6px; }
+  .step-box p { font-size: 0.84rem; color: #8a8a8a; margin: 0; line-height: 1.6; }
+
+  /* ── COURSES ── */
+  .course-tile {
+    background: #fff; border: 1px solid #ede9e2; border-radius: 18px;
+    padding: 24px; height: 100%;
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .course-tile::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #c47d3e, #e8b07a);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.25s;
+  }
+  .course-tile:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.08); transform: translateY(-3px); }
+  .course-tile:hover::after { transform: scaleX(1); }
+  .c-chip {
+    background: #f5ede3; color: #c47d3e;
+    border-radius: 8px; padding: 3px 10px;
+    font-size: 0.73rem; font-weight: 700; display: inline-block; margin-bottom: 12px;
+  }
+  .c-name { font-weight: 600; color: #1e1e1e; margin-bottom: 4px; }
+  .c-dur { font-size: 0.8rem; color: #9a9a9a; margin-bottom: 18px; }
+  .c-fee { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #1e1e1e; }
+  .c-fee small { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: #aaa; font-weight: 400; }
+
+  /* ── PERKS ── */
+  .perk-card {
+    background: #fff; border: 1px solid #ede9e2; border-radius: 18px;
+    padding: 28px 24px; height: 100%;
+  }
+  .perk-icon { font-size: 1.8rem; margin-bottom: 14px; }
+  .perk-card h6 { font-weight: 600; color: #1e1e1e; margin-bottom: 6px; }
+  .perk-card p { font-size: 0.84rem; color: #8a8a8a; margin: 0; line-height: 1.6; }
+
+  /* ── CTA BAND ── */
+  .cta-band {
+    background: #2a1f14;
+    border-radius: 24px;
+    padding: 56px 40px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .cta-band::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(196,125,62,0.25), transparent 65%);
+  }
+  .cta-band h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 10px;
+  }
+  .cta-band p { color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-bottom: 28px; }
+  .btn-warm-lg {
+    background: #c47d3e; color: #fff; border: none;
+    padding: 14px 36px; border-radius: 100px; font-size: 1rem; font-weight: 600;
+    text-decoration: none; display: inline-block;
+    transition: background 0.2s; position: relative; z-index: 2;
+  }
+  .btn-warm-lg:hover { background: #a8682f; color: #fff; }
+  .btn-outline-warm {
+    background: transparent; color: rgba(255,255,255,0.8);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    padding: 13px 30px; border-radius: 100px; font-size: 0.95rem; font-weight: 500;
+    text-decoration: none; display: inline-block;
+    transition: border-color 0.2s, color 0.2s; position: relative; z-index: 2;
+  }
+  .btn-outline-warm:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+
+  /* ── FOOTER STRIP ── */
+  footer { background: #fdfcf9 !important; border-top: 1px solid #ede9e2 !important; }
+
+  /* fade-in */
+  @keyframes riseIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+  .ri { animation: riseIn 0.6s ease both; }
+  .ri-2 { animation: riseIn 0.6s 0.12s ease both; }
+  .ri-3 { animation: riseIn 0.6s 0.24s ease both; }
+  .ri-4 { animation: riseIn 0.6s 0.36s ease both; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ─── HERO ─────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+
+      <div class="col-lg-6">
+        <div class="hero-eyebrow ri">Nepal's trusted learning platform</div>
+        <h1 class="ri-2">Your future,<br><em>guided with care</em></h1>
+        <p class="hero-sub ri-3">
+          Expert counseling, IELTS · PTE · SAT training, mock exams,
+          and academic planning — all in one calm, easy-to-use platform.
+        </p>
+        <div class="d-flex gap-3 flex-wrap ri-4">
+          <a href="{% url 'register' %}" class="btn-warm">Get started free</a>
+          <a href="{% url 'login' %}" class="btn-ghost">Sign in</a>
+        </div>
+      </div>
+
+      <div class="col-lg-6 ri-3">
+        <div class="hero-card">
+          <p class="sec-label mb-3">What we offer</p>
+          <div class="service-row">
+            <div class="svc-dot d1">🎯</div>
+            <div>
+              <div class="svc-title">Career Counseling</div>
+              <div class="svc-sub">One-on-one sessions with expert consultants</div>
+            </div>
+          </div>
+          <div class="service-row">
+            <div class="svc-dot d2">📚</div>
+            <div>
+              <div class="svc-title">IELTS · PTE · SAT Training</div>
+              <div class="svc-sub">Structured batches with certified trainers</div>
+            </div>
+          </div>
+          <div class="service-row">
+            <div class="svc-dot d3">📝</div>
+            <div>
+              <div class="svc-title">Mock Exams & Scoring</div>
+              <div class="svc-sub">Practice under real test conditions</div>
+            </div>
+          </div>
+          <div class="service-row">
+            <div class="svc-dot d4">🗓️</div>
+            <div>
+              <div class="svc-title">Exam Scheduling</div>
+              <div class="svc-sub">Book your official exam date with ease</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS ─────────────────────────────────── -->
+<div class="container mb-5">
+  <div class="stats-strip">
+    <div class="row g-3 align-items-center text-center">
+      <div class="col">
+        <div class="stat-n">{{ stats.students|default:"0" }}+</div>
+        <div class="stat-l">Students enrolled</div>
+      </div>
+      <div class="col-auto stat-sep d-none d-sm-block"></div>
+      <div class="col">
+        <div class="stat-n">{{ stats.courses|default:"0" }}+</div>
+        <div class="stat-l">Active courses</div>
+      </div>
+      <div class="col-auto stat-sep d-none d-sm-block"></div>
+      <div class="col">
+        <div class="stat-n">{{ stats.consultants|default:"0" }}+</div>
+        <div class="stat-l">Consultants</div>
+      </div>
+      <div class="col-auto stat-sep d-none d-sm-block"></div>
+      <div class="col">
+        <div class="stat-n">{{ stats.trainers|default:"0" }}+</div>
+        <div class="stat-l">Certified trainers</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── HOW IT WORKS ──────────────────────────── -->
+<section class="py-5 mb-2">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="sec-label">How it works</div>
+      <h2 class="sec-title">Four simple steps</h2>
+      <p class="sec-sub">From your first visit to your exam result — we're with you every step.</p>
+    </div>
+    <div class="row g-3">
+      <div class="col-sm-6 col-md-3">
+        <div class="step-box">
+          <div class="step-n">01</div>
+          <h6>Create account</h6>
+          <p>Sign up for free and fill in your student profile — takes under two minutes.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="step-box">
+          <div class="step-n">02</div>
+          <h6>Book counseling</h6>
+          <p>Schedule a session with a consultant who maps out the right path for you.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="step-box">
+          <div class="step-n">03</div>
+          <h6>Enroll in a batch</h6>
+          <p>Pick a course and batch that fits your schedule — IELTS, PTE, SAT &amp; more.</p>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="step-box">
+          <div class="step-n">04</div>
+          <h6>Ace your exam</h6>
+          <p>Practice with mock tests, track scores, then sit your official exam with confidence.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── COURSES ───────────────────────────────── -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="sec-label">Courses</div>
+      <h2 class="sec-title">What we teach</h2>
+      <p class="sec-sub">Internationally recognised test prep programs taught by certified experts.</p>
+    </div>
+    <div class="row g-3">
+      {% for course in courses %}
+      <div class="col-sm-6 col-md-4">
+        <div class="course-tile">
+          <div class="c-chip">{{ course.course_code }}</div>
+          <div class="c-name">{{ course.course_name }}</div>
+          <div class="c-dur">{{ course.duration_weeks }}-week program</div>
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="c-fee">₹{{ course.fee }} <small>/ course</small></div>
+            <a href="{% url 'register' %}" class="btn-warm" style="font-size:0.8rem;padding:8px 18px;">Enroll</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5 text-muted">
+        <p style="font-size:2rem;">📋</p>
+        <p>Courses coming soon. <a href="{% url 'register' %}" style="color:#c47d3e;">Register</a> to be notified.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ─── PERKS ─────────────────────────────────── -->
+<section class="py-5 mb-3">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="sec-label">Why us</div>
+      <h2 class="sec-title">Why students choose CTLMS</h2>
+    </div>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="perk-card">
+          <div class="perk-icon">🏅</div>
+          <h6>Proven results</h6>
+          <p>Our students consistently score above their target band in IELTS and PTE.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="perk-card">
+          <div class="perk-icon">🎓</div>
+          <h6>Certified faculty</h6>
+          <p>Every trainer and consultant is qualified with years of real teaching experience.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="perk-card">
+          <div class="perk-icon">💻</div>
+          <h6>Everything online</h6>
+          <p>Book sessions, pay fees, track scores, and manage documents — all from one place.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA BAND ──────────────────────────────── -->
+<div class="container mb-5">
+  <div class="cta-band">
+    <h2>Ready to begin?</h2>
+    <p>Join students who've already taken the first step towards their goals.</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a href="{% url 'register' %}" class="btn-warm-lg">Create free account</a>
+      <a href="{% url 'login' %}" class="btn-outline-warm">Sign in</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

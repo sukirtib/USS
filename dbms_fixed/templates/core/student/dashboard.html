@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Welcome, {{ user.get_full_name }}</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted">My Appointments</h6>
+                <h4>{{ profile.appointments.count }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted">Course Registrations</h6>
+                <h4>{{ profile.course_registrations.count }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted">Active Enrollments</h6>
+                <h4>{{ enrollments.count }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted">Exam Registrations</h6>
+                <h4>{{ profile.exam_registrations.count }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Recent Appointments</span>
+                <a href="{% url 'book_appointment' %}" class="btn btn-sm btn-primary">Book New</a>
+            </div>
+            <div class="card-body">
+                {% for apt in appointments %}
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <div>
+                        <strong>{{ apt.consultant.user.get_full_name }}</strong><br>
+                        <small class="text-muted">{{ apt.preferred_date }} at {{ apt.preferred_time }}</small>
+                    </div>
+                    <span class="badge badge-{{ apt.status|lower }}">{{ apt.status }}</span>
+                </div>
+                {% empty %}
+                <p class="text-muted mb-0">No appointments yet. <a href="{% url 'book_appointment' %}">Book one</a></p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Course Registrations</span>
+                <a href="{% url 'register_course' %}" class="btn btn-sm btn-primary">Register</a>
+            </div>
+            <div class="card-body">
+                {% for reg in registrations %}
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <div>
+                        <strong>{{ reg.course.course_name }}</strong><br>
+                        <small class="text-muted">Batch: {{ reg.batch.batch_code }}</small>
+                    </div>
+                    <span class="badge badge-{{ reg.status|lower }}">{{ reg.status }}</span>
+                </div>
+                {% empty %}
+                <p class="text-muted mb-0">No registrations. <a href="{% url 'register_course' %}">Register for a course</a></p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Active Enrollments</span>
+        <a href="{% url 'student_courses' %}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="card-body">
+        {% for enr in enrollments %}
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div>
+                <strong>{{ enr.registration.course.course_name }}</strong><br>
+                <small class="text-muted">Batch: {{ enr.registration.batch.batch_code }} • {{ enr.status }}</small>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted mb-0">No active enrollments.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+<!-- Mock Test Scores -->
+<div class="card mt-4">
+  <div class="card-header">My Mock Test Scores</div>
+  <div class="card-body p-0">
+    <table class="table table-sm mb-0">
+      <thead class="table-light"><tr><th>Mock Test</th><th>Course</th><th>Score</th><th>Remarks</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for sc in mock_scores %}
+        <tr>
+          <td>{{ sc.mock_test.mock_test_name }}</td>
+          <td>{{ sc.mock_test.course.course_name }}</td>
+          <td><strong>{{ sc.score }}/{{ sc.mock_test.total_marks }}</strong></td>
+          <td class="text-muted small">{{ sc.remarks|default:"—" }}</td>
+          <td class="text-muted small">{{ sc.recorded_at|date:"d M Y" }}</td>
+        </tr>
+        {% empty %}<tr><td colspan="5" class="text-center text-muted py-3">No scores recorded yet.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Documents -->
+<div class="card mt-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>My Documents</span>
+    <a href="{% url 'student_documents' %}" class="btn btn-sm btn-outline-primary">Manage Documents</a>
+  </div>
+  <div class="card-body p-0">
+    <table class="table table-sm mb-0">
+      <thead class="table-light"><tr><th>Type</th><th>Description</th><th>Uploaded</th></tr></thead>
+      <tbody>
+        {% for doc in documents %}
+        <tr>
+          <td>{{ doc.document_type }}</td>
+          <td class="text-muted small">{{ doc.description|default:"—" }}</td>
+          <td class="text-muted small">{{ doc.uploaded_at|date:"d M Y" }}</td>
+        </tr>
+        {% empty %}<tr><td colspan="3" class="text-center text-muted py-3">No documents yet. <a href="{% url 'student_documents' %}">Upload one</a>.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+
+        <!-- Order Summary -->
+        <div class="card mb-3 border-0 bg-light">
+            <div class="card-body">
+                <h6 class="text-muted text-uppercase mb-2">Order Summary</h6>
+                <div class="d-flex justify-content-between">
+                    <span>{{ course.course_name }} ({{ course.course_code }})</span>
+                    <strong>₹{{ course.fee }}</strong>
+                </div>
+                <div class="text-muted small">Batch: {{ batch.batch_name }} &mdash; {{ batch.start_date }}</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-4">
+                <h4 class="mb-4">💳 Payment Details</h4>
+                {% if pay_form.non_field_errors %}
+                <div class="alert alert-danger">{{ pay_form.non_field_errors }}</div>
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="step" value="pay">
+
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select name="payment_method" id="payment_method" class="form-select" onchange="toggleCardFields()">
+                            {% for val, label in pay_form.fields.payment_method.choices %}
+                            <option value="{{ val }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div id="card_fields">
+                        <div class="mb-3">
+                            <label class="form-label">Card Number</label>
+                            <input type="text" name="card_number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Card Holder Name</label>
+                                <input type="text" name="card_holder" class="form-control" placeholder="Name on card">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Expiry</label>
+                                <input type="text" name="expiry" class="form-control" placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">CVV</label>
+                                <input type="password" name="cvv" class="form-control" placeholder="***" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            ✅ Pay ₹{{ course.fee }}
+                        </button>
+                        <a href="{% url 'register_course' %}" class="btn btn-outline-secondary">← Back</a>
+                    </div>
+                    <p class="text-muted small text-center mt-2">This is a simulated payment — no real transaction occurs.</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleCardFields() {
+    const method = document.getElementById('payment_method').value;
+    const cardFields = document.getElementById('card_fields');
+    cardFields.style.display = (method === 'CARD') ? 'block' : 'none';
+}
+toggleCardFields();
+</script>
+{% endblock %}

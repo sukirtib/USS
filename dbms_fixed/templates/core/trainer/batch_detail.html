@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Batch {{ batch.batch_code }}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">{{ batch.batch_code }} - {{ batch.batch_name }}</h2>
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Course:</strong> {{ batch.course.course_name }}</p>
+        <p><strong>Schedule:</strong> {{ batch.start_date }} to {{ batch.end_date }} | {{ batch.start_time }} - {{ batch.end_time }}</p>
+        <p><strong>Students:</strong> {{ batch.current_students }}/{{ batch.capacity }}</p>
+        <p><strong>Status:</strong> <span class="badge badge-{{ batch.status|lower }}">{{ batch.status }}</span></p>
+        <div class="d-flex gap-2 mt-3">
+            <a href="{% url 'trainer_record_score' batch.id %}" class="btn btn-sm btn-success">+ Record Score</a>
+            <a href="{% url 'trainer_dashboard' %}" class="btn btn-sm btn-outline-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<h5>Enrolled Students</h5>
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <thead><tr><th>Student</th><th>Email</th><th>Enrollment Date</th></tr></thead>
+            <tbody>
+                {% for enr in enrollments %}
+                <tr>
+                    <td>{{ enr.student.user.get_full_name }}</td>
+                    <td>{{ enr.student.user.email }}</td>
+                    <td>{{ enr.enrollment_date|date }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-muted">No students enrolled yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

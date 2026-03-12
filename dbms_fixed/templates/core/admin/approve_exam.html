@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Review Exam Registration{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body p-4">
+        <h4 class="mb-4">Review Exam Registration</h4>
+        <table class="table table-sm">
+          <tr><th>Student</th><td>{{ exam.student.user.get_full_name }}</td></tr>
+          <tr><th>Course</th><td>{{ exam.course }}</td></tr>
+          <tr><th>Mock Test</th><td>{{ exam.mock_test|default:"—" }}</td></tr>
+          <tr><th>Exam Date</th><td>{{ exam.exam_date }}</td></tr>
+          <tr><th>Fee</th><td>₹{{ exam.fee }}</td></tr>
+          <tr><th>Status</th><td><span class="badge badge-{{ exam.status|lower }}">{{ exam.status }}</span></td></tr>
+        </table>
+        <form method="post" class="d-flex gap-2 mt-3">
+          {% csrf_token %}
+          <button name="action" value="approve" class="btn btn-success">✅ Approve</button>
+          <button name="action" value="reject" class="btn btn-danger">❌ Reject</button>
+          <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

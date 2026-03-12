@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Trainer Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Welcome, {{ profile.user.get_full_name }}</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted">Active Batches</h6>
+                <h4>{{ batches.count }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted">Total Students</h6>
+                <h4>{{ total_students }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">My Batches</div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr><th>Batch</th><th>Course</th><th>Schedule</th><th>Students</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for batch in batches %}
+                <tr>
+                    <td>{{ batch.batch_code }}</td>
+                    <td>{{ batch.course.course_name }}</td>
+                    <td>{{ batch.start_date }} - {{ batch.end_date }}<br><small>{{ batch.start_time }} - {{ batch.end_time }}</small></td>
+                    <td>{{ batch.current_students }}/{{ batch.capacity }}</td>
+                    <td><span class="badge badge-{{ batch.status|lower }}">{{ batch.status }}</span></td>
+                    <td><a href="{% url 'trainer_batch_detail' batch.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                    <a href="{% url 'trainer_record_score' batch.id %}" class="btn btn-sm btn-success">+ Score</a></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-muted">No batches assigned.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">My Assigned Students</div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead class="table-light"><tr><th>Student</th><th>Email</th></tr></thead>
+                    <tbody>
+                        {% for s in assigned_students %}
+                        <tr><td>{{ s.user.get_full_name }}</td><td class="text-muted small">{{ s.user.email }}</td></tr>
+                        {% empty %}
+                        <tr><td colspan="2" class="text-center text-muted py-3">No students directly assigned.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">Recently Recorded Scores</div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead class="table-light"><tr><th>Student</th><th>Mock Test</th><th>Score</th><th>Date</th></tr></thead>
+                    <tbody>
+                        {% for sc in recent_scores %}
+                        <tr>
+                            <td>{{ sc.student.user.get_full_name }}</td>
+                            <td>{{ sc.mock_test.mock_test_name }}</td>
+                            <td><strong>{{ sc.score }}</strong></td>
+                            <td class="text-muted small">{{ sc.recorded_at|date:"d M Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center text-muted py-3">No scores recorded yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
