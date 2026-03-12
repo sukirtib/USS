@@ -1,6 +1,7 @@
 """
 Seed demo data for CTLMS.
 Run: python manage.py seed_data
+Run with --force to reset and reseed: python manage.py seed_data --force
 """
 from django.core.management.base import BaseCommand
 from django.utils import timezone
@@ -17,6 +18,9 @@ from core.models import (
 class Command(BaseCommand):
     help = 'Seed demo data for CTLMS'
 
+    def add_arguments(self, parser):
+        parser.add_argument('--force', action='store_true', help='Delete existing data and reseed')
+
     def handle(self, *args, **options):
         # Always update admin privileges
         admin_user = User.objects.filter(username='admin').first()
@@ -26,8 +30,26 @@ class Command(BaseCommand):
             admin_user.save()
             self.stdout.write(self.style.SUCCESS('Updated admin with superuser privileges'))
 
-        if User.objects.filter(username='student1').exists():
-            self.stdout.write(self.style.WARNING('Demo data already seeded. Skipping.'))
+        if options['force']:
+            self.stdout.write('Force flag set - clearing demo data...')
+            # Delete demo data (but keep admin user)
+            MockTestScore.objects.all().delete()
+            Payment.objects.all().delete()
+            ExamRegistration.objects.all().delete()
+            Counseling.objects.all().delete()
+            AppointmentBooking.objects.all().delete()
+            Enrollment.objects.all().delete()
+            CourseRegistration.objects.all().delete()
+            MockTest.objects.all().delete()
+            Batch.objects.all().delete()
+            Course.objects.all().delete()
+            StudentProfile.objects.all().delete()
+            TrainerProfile.objects.all().delete()
+            ConsultantProfile.objects.all().delete()
+            User.objects.exclude(username='admin').delete()
+            self.stdout.write(self.style.SUCCESS('Cleared existing demo data'))
+        elif User.objects.filter(username='student1').exists():
+            self.stdout.write(self.style.WARNING('Demo data already seeded. Use --force to reseed.'))
             return
         self.stdout.write('Seeding data...')
 
