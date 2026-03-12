@@ -16,7 +16,8 @@ class User(AbstractUser):
         TRAINER = 'TRAINER', 'Trainer'
 
     phone_number = models.CharField(max_length=20, blank=True)
-    role = models.CharField(max_length=20, choices=Role.choices, default=Role.STUDENT)
+    role = models.CharField(
+        max_length=20, choices=Role.choices, default=Role.STUDENT)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -42,9 +43,17 @@ class User(AbstractUser):
 
 class StudentProfile(models.Model):
     """Extended profile for students."""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='student_profile')
     consultant = models.ForeignKey(
         'ConsultantProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='students'
+    )
+    date_of_birth = models.DateField(null=True, blank=True)
+    address = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    trainer = models.ForeignKey(
+        'TrainerProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='students'
     )
     date_of_birth = models.DateField(null=True, blank=True)
     address = models.TextField(blank=True)
@@ -56,7 +65,8 @@ class StudentProfile(models.Model):
 
 class ConsultantProfile(models.Model):
     """Profile for consultants/counsellors."""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='consultant_profile')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='consultant_profile')
     specialization = models.CharField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -66,7 +76,8 @@ class ConsultantProfile(models.Model):
 
 class TrainerProfile(models.Model):
     """Profile for trainers."""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='trainer_profile')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='trainer_profile')
     subject_expertise = models.CharField(max_length=200, blank=True)
     experience_years = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -80,7 +91,8 @@ class Course(models.Model):
     course_code = models.CharField(max_length=20, unique=True)
     course_name = models.CharField(max_length=200)
     duration_weeks = models.PositiveIntegerField(default=12)
-    fee = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    fee = models.DecimalField(max_digits=10, decimal_places=2, validators=[
+                              MinValueValidator(0)])
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -99,8 +111,10 @@ class Batch(models.Model):
         COMPLETED = 'COMPLETED', 'Completed'
         CANCELLED = 'CANCELLED', 'Cancelled'
 
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='batches')
-    trainer = models.ForeignKey(TrainerProfile, on_delete=models.CASCADE, related_name='batches')
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name='batches')
+    trainer = models.ForeignKey(
+        TrainerProfile, on_delete=models.CASCADE, related_name='batches')
     batch_name = models.CharField(max_length=100)
     batch_code = models.CharField(max_length=20, unique=True)
     start_date = models.DateField()
@@ -109,7 +123,8 @@ class Batch(models.Model):
     end_time = models.TimeField()
     capacity = models.PositiveIntegerField(default=30)
     current_students = models.PositiveIntegerField(default=0)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.UPCOMING)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.UPCOMING)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -131,11 +146,15 @@ class CourseRegistration(models.Model):
         APPROVED = 'APPROVED', 'Approved'
         REJECTED = 'REJECTED', 'Rejected'
 
-    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='course_registrations')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='registrations')
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='registrations')
+    student = models.ForeignKey(
+        StudentProfile, on_delete=models.CASCADE, related_name='course_registrations')
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name='registrations')
+    batch = models.ForeignKey(
+        Batch, on_delete=models.CASCADE, related_name='registrations')
     registration_date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.PENDING)
     approved_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_registrations'
     )
@@ -156,12 +175,14 @@ class Enrollment(models.Model):
         COMPLETED = 'COMPLETED', 'Completed'
         DROPPED = 'DROPPED', 'Dropped'
 
-    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='enrollments')
+    student = models.ForeignKey(
+        StudentProfile, on_delete=models.CASCADE, related_name='enrollments')
     registration = models.OneToOneField(
         CourseRegistration, on_delete=models.CASCADE, related_name='enrollment'
     )
     enrollment_date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.ACTIVE)
     certificate_issued = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -181,13 +202,16 @@ class AppointmentBooking(models.Model):
         COMPLETED = 'COMPLETED', 'Completed'
         CANCELLED = 'CANCELLED', 'Cancelled'
 
-    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='appointments')
-    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE, related_name='appointments')
+    student = models.ForeignKey(
+        StudentProfile, on_delete=models.CASCADE, related_name='appointments')
+    consultant = models.ForeignKey(
+        ConsultantProfile, on_delete=models.CASCADE, related_name='appointments')
     purpose = models.TextField()
     preferred_date = models.DateField()
     preferred_time = models.TimeField()
     duration_minutes = models.PositiveIntegerField(default=60)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.PENDING)
     approved_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_appointments'
     )
@@ -219,7 +243,8 @@ class Counseling(models.Model):
 class MockTest(models.Model):
     """Mock tests for exam preparation and assessment."""
     mock_test_name = models.CharField(max_length=200)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='mock_tests')
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name='mock_tests')
     total_marks = models.PositiveIntegerField(default=100)
     duration_minutes = models.PositiveIntegerField(default=120)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -239,15 +264,20 @@ class ExamRegistration(models.Model):
         REJECTED = 'REJECTED', 'Rejected'
         COMPLETED = 'COMPLETED', 'Completed'
 
-    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='exam_registrations')
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='exam_registrations')
+    student = models.ForeignKey(
+        StudentProfile, on_delete=models.CASCADE, related_name='exam_registrations')
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name='exam_registrations')
     mock_test = models.ForeignKey(
         MockTest, on_delete=models.CASCADE, null=True, blank=True, related_name='registrations'
     )
     exam_date = models.DateField()
-    fee = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], default=0)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
-    score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    fee = models.DecimalField(max_digits=10, decimal_places=2, validators=[
+                              MinValueValidator(0)], default=0)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.PENDING)
+    score = models.DecimalField(
+        max_digits=5, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -279,14 +309,18 @@ class Payment(models.Model):
     enrollment = models.ForeignKey(
         Enrollment, on_delete=models.CASCADE, null=True, blank=True, related_name='payments'
     )
-    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='payments')
+    student = models.ForeignKey(
+        StudentProfile, on_delete=models.CASCADE, related_name='payments')
     exam_registration = models.ForeignKey(
         ExamRegistration, on_delete=models.SET_NULL, null=True, blank=True, related_name='payments'
     )
-    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    payment_method = models.CharField(max_length=20, choices=PaymentMethod.choices)
+    amount = models.DecimalField(
+        max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    payment_method = models.CharField(
+        max_length=20, choices=PaymentMethod.choices)
     purpose = models.CharField(max_length=20, choices=Purpose.choices)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.PENDING)
     transaction_id = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -299,8 +333,10 @@ class Payment(models.Model):
 
 class StudentDocument(models.Model):
     """Store student documents (certificates, IDs, etc.)."""
-    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='documents')
-    document_type = models.CharField(max_length=100)  # e.g., 'passport', 'certificate'
+    student = models.ForeignKey(
+        StudentProfile, on_delete=models.CASCADE, related_name='documents')
+    # e.g., 'passport', 'certificate'
+    document_type = models.CharField(max_length=100)
     file = models.FileField(upload_to='student_docs/%Y/%m/')
     description = models.CharField(max_length=200, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
