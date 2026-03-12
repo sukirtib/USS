@@ -11,5 +11,8 @@ python manage.py migrate
 # Collect static files
 python manage.py collectstatic --noinput
 
-# Create superuser if needed (optional)
-# python manage.py createsuperuser --noinput || true
+# Create superuser if needed
+python manage.py create_admin || true
+
+# Seed demo data (skips if users already exist)
+python manage.py seed_data || true

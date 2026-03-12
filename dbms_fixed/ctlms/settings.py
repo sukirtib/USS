@@ -15,13 +15,14 @@ if load_dotenv:
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get(
+SECRET_KEY = os.environ.get('SECRET_KEY') or os.environ.get(
     'DJANGO_SECRET_KEY', 'django-insecure-change-this-in-production-ctlms-2026')
 
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
 # Update ALLOWED_HOSTS for Render
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com', '*']
+_allowed = os.environ.get('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [h.strip() for h in _allowed.split(',') if h.strip()] if _allowed else ['localhost', '127.0.0.1', '.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
