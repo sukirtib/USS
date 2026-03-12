@@ -70,11 +70,13 @@ WSGI_APPLICATION = 'ctlms.wsgi.application'
 # Render provides PostgreSQL, so we'll use that in production
 if os.environ.get('RENDER') == 'true' or os.environ.get('DATABASE_URL'):
     # Production on Render - use PostgreSQL
+    _db_url = os.environ.get('DATABASE_URL', '')
+    _ssl_require = not _db_url.startswith('sqlite')  # No SSL for SQLite
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
+            default=_db_url,
             conn_max_age=600,
-            ssl_require=True
+            ssl_require=_ssl_require
         )
     }
 else:
