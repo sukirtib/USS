@@ -14,5 +14,8 @@ python manage.py collectstatic --noinput
 # Create superuser if needed
 python manage.py create_admin || true
 
+# Fix admin permissions (ensures Django admin access)
+python manage.py fix_admin || true
+
 # Seed demo data (skips if users already exist)
 python manage.py seed_data || true
